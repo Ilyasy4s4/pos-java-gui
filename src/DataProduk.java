@@ -25,12 +25,20 @@ public class DataProduk extends javax.swing.JPanel {
     }
     
     private void initTable() {
-        model = new DefaultTableModel(
-            new Object[]{"ID Barang", "Nama Barang", "ID Kategori", "Harga Beli", "Harga Jual", "Stok", "Satuan", "Diskon"}, 0
-        );
-        jTable1.setModel(model);
-        sorter = new TableRowSorter<>(model);
-        jTable1.setRowSorter(sorter);
+    // Menambahkan Override isCellEditable agar semua sel terkunci
+    model = new DefaultTableModel(
+        new Object[]{"ID Barang", "Nama Barang", "ID Kategori", "Harga Beli", "Harga Jual", "Stok", "Satuan", "Diskon"}, 0
+    ) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Mengembalikan false agar pengguna tidak bisa mengedit isi tabel
+            return false;
+        }
+    };
+    
+    jTable1.setModel(model);
+    sorter = new TableRowSorter<>(model);
+    jTable1.setRowSorter(sorter);
     }
     
    private void setupSearchFilter() {
@@ -95,7 +103,7 @@ public class DataProduk extends javax.swing.JPanel {
         B_tambah = new javax.swing.JButton();
         b_edit = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(51, 204, 0));
+        setBackground(new java.awt.Color(39, 174, 96));
 
         jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(

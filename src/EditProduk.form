@@ -39,7 +39,7 @@
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="99" green="ff" red="99" type="rgb"/>
+          <Color blue="60" green="ae" red="27" type="rgb"/>
         </Property>
       </Properties>
 
@@ -58,7 +58,7 @@
                       <Component id="label7" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="label8" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="165" max="32767" attributes="0"/>
+                  <EmptySpace pref="149" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                           <Component id="j_id_barang" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>

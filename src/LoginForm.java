@@ -76,7 +76,6 @@ public class LoginForm extends javax.swing.JFrame {
                 formMousePressed(evt);
             }
         });
-        getContentPane().setLayout((LayoutManager) new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setForeground(new java.awt.Color(51, 204, 0));
@@ -161,7 +160,7 @@ public class LoginForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(t_username, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .addComponent(t_username)
                             .addComponent(t_password)
                             .addComponent(bt_login, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -194,7 +193,16 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGap(70, 70, 70))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-1, 0, 510, 290));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -276,6 +284,14 @@ public class LoginForm extends javax.swing.JFrame {
             MenuForm menuKasir = new MenuForm(this); // kirim LoginForm ke MenuForm
             menuKasir.setVisible(true);
             this.dispose(); // tutup form login
+            
+            } else if (role.equalsIgnoreCase("owner")) {
+            // JANGAN TULIS: dashboard Dashboard = ...
+            // TULIS LANGSUNG:
+            dashboard ownerDash = new dashboard(); // Pastikan nama variabel tidak bentrok dengan nama class
+            ownerDash.setVisible(true);
+            this.dispose();
+
 
             } else {
             JOptionPane.showMessageDialog(this,
@@ -284,8 +300,8 @@ public class LoginForm extends javax.swing.JFrame {
             JOptionPane.ERROR_MESSAGE);
 }
 
-
-
+            
+            
         } else {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "Username atau Password salah. Coba lagi.",

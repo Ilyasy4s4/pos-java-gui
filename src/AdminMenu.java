@@ -36,14 +36,24 @@ public final class AdminMenu extends javax.swing.JPanel {
         
         
      
-    private void initTable() {
-        model = new DefaultTableModel(
-            new Object[]{"ID User", "Username", "Password", "Role"}, 0
-        );
-        jTable1.setModel(model);
-        sorter = new TableRowSorter<>(model);
-        jTable1.setRowSorter(sorter);
-    }
+   private void initTable() {
+    // Override isCellEditable agar SELALU false untuk semua kolom
+    model = new DefaultTableModel(
+        new Object[]{"ID User", "Username", "Password", "Role"}, 0
+    ) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Mengunci semua sel tabel agar tidak bisa diketik
+        }
+    };
+    
+    jTable1.setModel(model);
+    sorter = new TableRowSorter<>(model);
+    jTable1.setRowSorter(sorter);
+    
+    // Opsional: Agar saat baris diklik tampilannya lebih jelas
+    jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+}
    
 
     private void setupSearch() {
@@ -106,7 +116,7 @@ public final class AdminMenu extends javax.swing.JPanel {
         B_Refresh = new javax.swing.JButton();
         Search = new javax.swing.JTextField();
 
-        setBackground(new java.awt.Color(51, 204, 0));
+        setBackground(new java.awt.Color(39, 174, 96));
 
         jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -169,8 +179,8 @@ public final class AdminMenu extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

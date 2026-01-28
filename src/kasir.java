@@ -1,3 +1,14 @@
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException; // Ini yang bikin error "Create Class SQLException" tadi
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -8,13 +19,42 @@
  * @author LENOVO
  */
 public class kasir extends javax.swing.JPanel {
+    
+    private static kasir instance;
+
 
     /**
      * Creates new form kasir
      */
     public kasir() {
-        initComponents();
+    initComponents();
+    instance = this;
+    loadCartToTable();
+    
+    // Tambahkan listener agar kembalian update otomatis
+    jTextField2.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { hitungKembalian(); }
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { hitungKembalian(); }
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { hitungKembalian(); }
+    });
+}
+
+private void hitungKembalian() {
+    try {
+        double total = Double.parseDouble(jTextField3.getText());
+        double bayar = Double.parseDouble(jTextField2.getText());
+        jTextField5.setText(String.valueOf(bayar - total));
+    } catch (NumberFormatException e) {
+        jTextField5.setText("0");
     }
+}
+        public static void refreshCart() {
+        if (instance != null) {
+            instance.loadCartToTable();
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,19 +67,21 @@ public class kasir extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new java.awt.Color(204, 204, 204));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -49,11 +91,22 @@ public class kasir extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id barang", "nama barang", "jumlah", "harrga"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
+        jPanel1.setBackground(new java.awt.Color(39, 174, 96));
+
+        jLabel1.setBackground(new java.awt.Color(0, 204, 0));
         jLabel1.setText("Sub Total");
 
         jLabel2.setText("Diskon");
@@ -64,7 +117,17 @@ public class kasir extends javax.swing.JPanel {
 
         jLabel5.setText("Kembalian");
 
-        jButton1.setBackground(new java.awt.Color(204, 204, 204));
+        jButton2.setBackground(new java.awt.Color(0, 102, 51));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Hapus");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setBackground(new java.awt.Color(0, 102, 0));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Cetak Struk");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,82 +135,251 @@ public class kasir extends javax.swing.JPanel {
             }
         });
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(59, 59, 59)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField3)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(36, 36, 36))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                .addGap(103, 103, 103))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(99, 99, 99)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))))
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1))
-                .addGap(20, 20, 20))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel1))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+// Validasi dasar
+   // 1. VALIDASI (Cek keranjang & pembayaran)
+    if (AppSession.cart.getItems().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Keranjang masih kosong!");
+        return;
+    }
+    try {
+        double total = Double.parseDouble(jTextField3.getText());
+        double bayar = Double.parseDouble(jTextField2.getText());
+        if (bayar < total) {
+            JOptionPane.showMessageDialog(this, "Uang pembayaran kurang!");
+            return;
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Input bayar harus angka!");
+        return;
+    }
+
+    // 2. PROSES DATABASE
+    Connection conn = koneksi.getConnection();
+    try {
+        conn.setAutoCommit(false); // [PENTING] Mulai transaksi database
+
+        // A. Simpan ke tabel TRANSAKSI (Mencatat ID Kasir yang Login)
+        String sqlTrans = "INSERT INTO transaksi (tanggal_transaksi, id_user, total_harga, bayar, kembalian) VALUES (CURDATE(), ?, ?, ?, ?)";
+        PreparedStatement psTrans = conn.prepareStatement(sqlTrans, Statement.RETURN_GENERATED_KEYS);
+        psTrans.setInt(1, AppSession.idUser); // [TAMBAHAN] Ambil ID dari Login
+        psTrans.setDouble(2, Double.parseDouble(jTextField3.getText()));
+        psTrans.setDouble(3, Double.parseDouble(jTextField2.getText()));
+        psTrans.setDouble(4, Double.parseDouble(jTextField5.getText()));
+        psTrans.executeUpdate();
+
+        // Ambil ID Transaksi yang baru dibuat (Auto Increment)
+        ResultSet rs = psTrans.getGeneratedKeys();
+        int idTransaksi = 0;
+        if (rs.next()) idTransaksi = rs.getInt(1);
+
+        // B. Simpan DETAIL & UPDATE STOK (Looping keranjang)
+        String sqlDetail = "INSERT INTO detail_transaksi (id_transaksi, id_barang, jumlah, harga_satuan, sub_total) VALUES (?, ?, ?, ?, ?)";
+        String sqlUpdateStok = "UPDATE barang SET stok = stok - ? WHERE id_barang = ?";
+        
+        PreparedStatement psDetail = conn.prepareStatement(sqlDetail);
+        PreparedStatement psStok = conn.prepareStatement(sqlUpdateStok);
+
+        for (CartItem item : AppSession.cart.getItems()) {
+            // Isi detail
+            psDetail.setInt(1, idTransaksi);
+            psDetail.setInt(2, Integer.parseInt(item.getIdBarang()));
+            psDetail.setInt(3, item.getJumlah());
+            psDetail.setDouble(4, item.getHarga());
+            psDetail.setDouble(5, item.getTotal());
+            psDetail.addBatch();
+
+            // Isi update stok
+            psStok.setInt(1, item.getJumlah());
+            psStok.setInt(2, Integer.parseInt(item.getIdBarang()));
+            psStok.addBatch();
+        }
+
+        psDetail.executeBatch();
+        psStok.executeBatch();
+        
+        conn.commit(); // [PENTING] Simpan permanen jika semua sukses
+        
+        // 3. FINISH
+        cetakStruk(); // Panggil fungsi cetak (Visual)
+        JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
+
+        // Reset tampilan
+        AppSession.cart.clear();
+        loadCartToTable();
+        jTextField2.setText("");
+        jTextField5.setText("");
+
+    } catch (SQLException e) {
+        try { if(conn != null) conn.rollback(); } catch (SQLException ex) {}
+        JOptionPane.showMessageDialog(this, "Gagal Simpan: " + e.getMessage());
+    } finally {
+        try { if(conn != null) conn.close(); } catch (SQLException e) {}
+    }
+
+    }
+
+// Fungsi bantu cetak struk agar kode lebih rapi
+private void cetakStruk() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("=== STRUK KASIR ===\n\n");
+    for (CartItem item : AppSession.cart.getItems()) {
+        sb.append(item.getNamaBarang()).append(" x").append(item.getJumlah())
+          .append("\t: ").append(item.getTotal()).append("\n");
+    }
+    sb.append("\nTotal: ").append(jTextField3.getText());
+    sb.append("\nBayar: ").append(jTextField2.getText());
+    sb.append("\nKembali: ").append(jTextField5.getText());
+    
+    JTextArea area = new JTextArea(sb.toString());
+    JOptionPane.showMessageDialog(this, new JScrollPane(area), "Struk", JOptionPane.PLAIN_MESSAGE);
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:                                        
+    int row = jTable1.getSelectedRow();
+    if (row == -1) return;
+
+    AppSession.cart.removeItem(row);
+    loadCartToTable();
+}                                        
+
+
+// ================= TAMBAHKAN DI SINI =================
+
+private void loadCartToTable() {
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0);
+
+    for (CartItem item : AppSession.cart.getItems()) {
+        model.addRow(new Object[]{
+            item.getIdBarang(),
+            item.getNamaBarang(),
+            item.getJumlah(),
+            item.getTotal()
+
+        });
+    }
+
+    updateTotal();
+}
+
+private void updateTotal() {
+    double subTotal = AppSession.cart.getTotal(); // Total belanja kotor
+    double diskon = 0; // Kamu bisa tambahkan logika diskon di sini jika perlu
+    
+    // 1. Tampilkan ke TextField masing-masing
+    jTextField1.setText(String.valueOf(subTotal)); // Sub Total
+    jTextField4.setText(String.valueOf(diskon));   // Diskon
+    
+    double totalAkhir = subTotal - diskon;
+    jTextField3.setText(String.valueOf(totalAkhir)); // Total Bersih
+
+    // 2. Update Kembalian jika sudah ada input di kolom Bayar
+    try {
+        String bayarStr = jTextField2.getText().trim();
+        if(!bayarStr.isEmpty()){
+            double bayar = Double.parseDouble(bayarStr);
+            jTextField5.setText(String.valueOf(bayar - totalAkhir));
+        }
+    } catch (Exception e) {
+        jTextField5.setText("0");
+    }
+
+// =====================================================
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

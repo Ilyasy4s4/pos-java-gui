@@ -41,7 +41,7 @@ public class MenuAdmin extends javax.swing.JFrame {
 });
 
 }
-    
+   
     
     private void tampilkanDataAdmin() {
         // Ambil data dari login form
@@ -76,15 +76,14 @@ public class MenuAdmin extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnUser = new javax.swing.JButton();
         btnProduk = new javax.swing.JButton();
-        btnLaporan = new javax.swing.JButton();
-        btnDashboard = new javax.swing.JButton();
         logout = new javax.swing.JButton();
+        btnRiwayat = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 102, 102));
 
-        jPanel1.setBackground(new java.awt.Color(51, 204, 0));
+        jPanel1.setBackground(new java.awt.Color(39, 174, 96));
 
         getProfil.setBackground(new java.awt.Color(0, 51, 255));
         getProfil.setForeground(new java.awt.Color(255, 255, 255));
@@ -105,14 +104,17 @@ public class MenuAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnLaporan.setText("Laporan");
-
-        btnDashboard.setText("Dashboard");
-
         logout.setText("Logout");
         logout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutActionPerformed(evt);
+            }
+        });
+
+        btnRiwayat.setText("Riwayat ");
+        btnRiwayat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRiwayatActionPerformed(evt);
             }
         });
 
@@ -123,28 +125,27 @@ public class MenuAdmin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnRiwayat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnProduk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                    .addComponent(btnLaporan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnProduk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnUser)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnProduk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLaporan)
                 .addGap(18, 18, 18)
+                .addComponent(btnUser)
+                .addGap(18, 18, 18)
+                .addComponent(btnProduk)
+                .addGap(18, 18, 18)
+                .addComponent(btnRiwayat)
+                .addGap(31, 31, 31)
                 .addComponent(logout)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel3.setBackground(new java.awt.Color(236, 240, 241));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -255,6 +256,25 @@ public class MenuAdmin extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnProdukActionPerformed
 
+    private void btnRiwayatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatActionPerformed
+        // TODO add your handling code here:
+    jPanel3.removeAll();
+
+    // Buat instance dari panel AdminMenu
+    RiwayatAdmin adminPanel = new RiwayatAdmin();
+
+    // Sesuaikan ukuran agar pas dengan jPanel3
+    adminPanel.setSize(jPanel3.getSize());
+    adminPanel.setVisible(true);
+
+    // Tambahkan panel ke jPanel3
+    jPanel3.add(adminPanel);
+
+    // Refresh tampilannya supaya langsung kelihatan
+    jPanel3.revalidate();
+    jPanel3.repaint();
+    }//GEN-LAST:event_btnRiwayatActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -281,9 +301,8 @@ public class MenuAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDashboard;
-    private javax.swing.JButton btnLaporan;
     private javax.swing.JButton btnProduk;
+    private javax.swing.JButton btnRiwayat;
     private javax.swing.JButton btnUser;
     private javax.swing.JLabel getProfil;
     private javax.swing.JPanel jPanel1;

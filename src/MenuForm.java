@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 public class MenuForm extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MenuForm.class.getName());
+    
     private LoginForm loginForm;    /**
      * Creates new form MenuForm
      */
@@ -21,10 +22,18 @@ public class MenuForm extends javax.swing.JFrame {
      * Creates new form MenuForm
      * @param loginForm
      */
+  
+    
     public MenuForm(LoginForm loginForm) {
         this.loginForm = loginForm;
         initComponents();
+        
+        AppSession.idUser = loginForm.getUserId();
+        AppSession.namaUser = loginForm.getUsername();
+        
         tampilkanDataUser();
+        
+        showHome();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // biar langsung fullscreen
     setLocationRelativeTo(null);
      // 🔹 Event klik ikon/label profil
@@ -48,7 +57,8 @@ public class MenuForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         
     }
-        
+     
+
        
         private void tampilkanDataUser() {
         // Ambil data dari loginForm
@@ -64,7 +74,16 @@ public class MenuForm extends javax.swing.JFrame {
         getProfil.setText( username );
         }
         
-        
+        private void showHome() {
+        panelContent.removeAll();
+        HOME homePanel = new HOME();
+
+        // Gunakan BorderLayout agar panel otomatis mengisi seluruh area
+        panelContent.add(homePanel, java.awt.BorderLayout.CENTER);
+
+        panelContent.revalidate();
+        panelContent.repaint();
+}
        
 
     /**
@@ -85,7 +104,7 @@ public class MenuForm extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        panelContent = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         getProfil = new javax.swing.JLabel();
 
@@ -95,8 +114,18 @@ public class MenuForm extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(750, 425));
 
         jButton1.setText("Dashboard");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Kasir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Produk");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -106,10 +135,20 @@ public class MenuForm extends javax.swing.JFrame {
         });
 
         jButton4.setText("Laporan");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Riwayat");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
-        btnLogout.setBackground(new java.awt.Color(0, 153, 0));
+        btnLogout.setBackground(new java.awt.Color(39, 174, 96));
         btnLogout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
@@ -170,18 +209,8 @@ public class MenuForm extends javax.swing.JFrame {
                 .addComponent(btnLogout))
         );
 
-        jPanel3.setPreferredSize(new java.awt.Dimension(900, 425));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 436, Short.MAX_VALUE)
-        );
+        panelContent.setPreferredSize(new java.awt.Dimension(900, 425));
+        panelContent.setLayout(new java.awt.BorderLayout());
 
         getProfil.setBackground(new java.awt.Color(51, 51, 51));
         getProfil.setForeground(new java.awt.Color(0, 153, 0));
@@ -212,7 +241,7 @@ public class MenuForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)))
+                    .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,7 +249,7 @@ public class MenuForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -261,8 +290,86 @@ public class MenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+     panelContent.removeAll();
+
+    // Buat instance dari panel AdminMenu
+    produkk ProdukkPanel = new produkk();
+
+    // Sesuaikan ukuran agar pas dengan jPanel3
+    ProdukkPanel.setSize(panelContent.getSize());
+    ProdukkPanel.setVisible(true);
+
+    // Tambahkan panel ke jPanel3
+    panelContent.add(ProdukkPanel);
+
+    // Refresh tampilannya supaya langsung kelihatan
+    panelContent.revalidate();
+    panelContent.repaint();
+       
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    showHome();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+            // Hapus semua komponen yang sedang tampil di jPanel3
+    panelContent.removeAll();
+
+    // Buat instance dari panel AdminMenu
+    kasir KasirPanel = new kasir();
+
+    // Sesuaikan ukuran agar pas dengan jPanel3
+    KasirPanel.setSize(panelContent.getSize());
+     KasirPanel.setVisible(true);
+
+    // Tambahkan panel ke jPanel3
+   panelContent.add( KasirPanel);
+
+    // Refresh tampilannya supaya langsung kelihatan
+    panelContent.revalidate();
+    panelContent.repaint();
+       
+                                           
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    panelContent.removeAll();
+
+    // Buat instance dari panel AdminMenu
+    laporan LaporanPanel = new laporan();
+
+    // Sesuaikan ukuran agar pas dengan jPanel3
+    LaporanPanel.setSize(panelContent.getSize());
+    LaporanPanel.setVisible(true);
+
+    // Tambahkan panel ke jPanel3
+    panelContent.add( LaporanPanel);
+
+    // Refresh tampilannya supaya langsung kelihatan
+    panelContent.revalidate();
+    panelContent.repaint();        
+    
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    panelContent.removeAll();
+
+    // Buat instance dari panel AdminMenu
+    Riwayat riwayatPanel = new  Riwayat();
+
+    // Sesuaikan ukuran agar pas dengan jPanel3
+    riwayatPanel.setSize(panelContent.getSize());
+    riwayatPanel.setVisible(true);
+
+    // Tambahkan panel ke jPanel3
+    panelContent.add(  riwayatPanel);
+
+    // Refresh tampilannya supaya langsung kelihatan
+    panelContent.revalidate();
+    panelContent.repaint(); 
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,7 +407,8 @@ public class MenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel panelContent;
     // End of variables declaration//GEN-END:variables
 }
+
